@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/Tree.png</file>
+        <file>images/blue.png</file>
+        <file>images/blue1.png</file>
+        <file>images/blue2.png</file>
+        <file>images/blue3.png</file>
+        <file>images/blue4.png</file>
+        <file>images/blue5.png</file>
+        <file>images/green.png</file>
+        <file>images/green1.png</file>
+        <file>images/green2.png</file>
+        <file>images/green3.png</file>
+        <file>images/green4.png</file>
+        <file>images/green5.png</file>
+        <file>images/red.png</file>
+        <file>images/red1.png</file>        
+        <file>images/red2.png</file>
+        <file>images/red3.png</file>
+        <file>images/red4.png</file>
+        <file>images/red5.png</file>
+        <file>images/yellow.png</file>
+        <file>images/yellow1.png</file>
+        <file>images/yellow2.png</file>
+        <file>images/yellow3.png</file>
+        <file>images/yellow4.png</file>
+        <file>images/yellow5.png</file>
+        <file>images/aqua1.png</file>
+        <file>images/aqua2.png</file>
+        <file>images/aqua3.png</file>
+        <file>images/aqua4.png</file>
+        <file>images/aqua5.png</file>
+        <file>images/fuji1.png</file>
+        <file>images/fuji2.png</file>
+        <file>images/fuji3.png</file>
+        <file>images/fuji4.png</file>
+        <file>images/fuji5.png</file>
+    </qresource>
+</RCC>
+ 
