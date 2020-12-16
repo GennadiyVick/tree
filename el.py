@@ -18,7 +18,7 @@ class vect():
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, qApp):
         super(MainWindow, self).__init__()
-        self.ui = wnd.Ui_MainWindow() #создаём простой объект ui для 
+        self.ui = wnd.Ui_MainWindow() #создаём простой объект ui 
         self.ui.setupUi(self)
         self.qApp = qApp
         self.scn = QGraphicsScene(self)
@@ -62,7 +62,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def initContextMenu(self, pos):
         menu = QMenu(self)
-        menu.setStyleSheet("background: #222")
+        menu.setStyleSheet("background: #333; color: white;")
 
         smenu = menu.addMenu("Скорость")
         act = QAction("Медленно",self)
