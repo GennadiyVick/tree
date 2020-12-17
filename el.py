@@ -1,4 +1,22 @@
 #!/usr/bin/python3
+
+# Program show Tree with flashing lights
+# Copyright (C) 2020  Roganov G.V. roganovg@mail.ru
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QMenu, QAction, QGraphicsScene
@@ -39,6 +57,7 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.elimg = self.scn.addPixmap(QPixmap(":/images/Tree.png"))
         self.elimg.setTransformationMode(QtCore.Qt.SmoothTransformation)
+        self.elimg.setZValue(2)
 
         self.gv.setContextMenuPolicy(Qt.CustomContextMenu)
         self.gv.customContextMenuRequested.connect(self.initContextMenu)        
@@ -49,6 +68,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lamps = []
         self.setLamps()
         self.curlight = -1
+        self.snowalphach_len = self.height() / 3
+        self.snows = []
+        self.snowgroups = []
+        self.setSnows()
+        
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.onTimer)
         self.timerinterval = 50
@@ -57,6 +81,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lampturn = 1
         self.sparr = [0.1,0.4,0.6]
         self.cols = 6
+        self.snowfallspeed = [2,1.25,0.8]
+        self.snowing = True
         
 
 
@@ -88,7 +114,9 @@ class MainWindow(QtWidgets.QMainWindow):
         act = QAction("По 4 лампочки",self)
         act.triggered.connect(self.forelamp)
         kmenu.addAction(act)       
-        
+        act = QAction("Снег",self)
+        act.triggered.connect(self.snowOffOn)
+        menu.addAction(act)     
         
         menu.addSeparator()
         act = QAction("Закрыть",self)
@@ -106,6 +134,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.speed = 1
     def fastspeed(self):
         self.speed = 2
+        
+    def snowOffOn(self):
+        #i = QtWidgets.QGraphicsItem
+        self.snowing = not self.snowing
+        for snows in self.snows:
+            for snow in snows:
+                if self.snowing:
+                    snow.item.show()
+                else:
+                    snow.item.hide()
+        
         
     def setlampsTurn(self,n):
         self.timer.stop()
@@ -162,10 +201,42 @@ class MainWindow(QtWidgets.QMainWindow):
             lamps = []
             for v in pts[c]:
                 lamp = Lamp(self.scn,":/images/"+clrs[c][cv]+".png",v.y,v.x)
+                lamp.item.setZValue(4)
                 lamps.append(lamp)
                 cv += 1
                 if cv > 4: cv = 0
             self.lamps.append(lamps)
+            
+    def setSnows(self):
+        maxminsnows = 50
+        sc = [random.randint(0,14)+maxminsnows,
+              random.randint(0,14)+maxminsnows,
+              random.randint(0,14)+maxminsnows]
+        
+        for i in range(len(sc)):
+            snows = []
+            items = []
+            for j in range(sc[i]):
+                imgfn = ":/images/snow"+str(i+1)+".png"
+                x = random.randint(8,self.width()-8)
+                y = random.randint(10,self.height())
+                a = 1
+                hl = self.height()-self.snowalphach_len
+                if y > hl:
+                    a = 1 - (y - hl)/self.snowalphach_len
+                lamp = Lamp(self.scn,imgfn,x,y,a)
+                snows.append(lamp)
+                items.append(lamp.item)
+            group = self.scn.createItemGroup(items)
+            if i < 2:
+                group.setZValue(4)
+            else:
+                group.setZValue(0)
+            
+            self.snows.append(snows)
+            self.snowgroups.append(items)
+
+        
 
     def onTimer(self):
         finished = False
@@ -191,6 +262,24 @@ class MainWindow(QtWidgets.QMainWindow):
         if finished:
             self.curlight += 1
             if self.curlight >= self.cols: self.curlight = 0
+        
+        if self.snowing:
+            for i in range(len(self.snows)):
+                for snow in self.snows[i]:
+                    a = snow.alpha
+                    snow.y += self.snowfallspeed[i]
+                    if snow.y > self.height(): 
+                        snow.y = -10-random.randint(0,15)
+                        snow.x = random.randint(8,self.width()-8)
+                        snow.alpha = 1
+                    else:
+                        hl = self.height()-self.snowalphach_len
+                        if snow.y > hl:
+                            snow.alpha = 1 - (snow.y - hl)/self.snowalphach_len
+                    snow.item.setPos(QPointF(snow.x-snow.hw,snow.y-snow.hh))
+                    if snow.alpha != a:
+                        snow.item.setOpacity(snow.alpha)
+
 
             
     def mousePress(self,event):

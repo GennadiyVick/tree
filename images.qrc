@@ -35,6 +35,9 @@
         <file>images/fuji3.png</file>
         <file>images/fuji4.png</file>
         <file>images/fuji5.png</file>
+        <file>images/snow1.png</file>
+        <file>images/snow2.png</file>
+        <file>images/snow3.png</file>        
     </qresource>
 </RCC>
  
