@@ -20,7 +20,7 @@
 import sys
 from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QMenu, QAction, QGraphicsScene
-from PyQt5.QtCore import Qt, QPointF, QSize, QTimer
+from PyQt5.QtCore import Qt, QPointF, QSize, QTimer, QSettings
 from PyQt5.QtGui import QPainter, QPixmap
 import random
 import wnd
@@ -52,15 +52,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.gv.show()
         self.gv.mousePressEvent = self.mousePress
         self.gv.mouseMoveEvent = self.mouseMove
-        
-        self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
+
+        set = QSettings("Tree", "config")
+        x = int(set.value("Main/Left","-1"))
+        y = int(set.value("Main/Top","-1"))
+        if x > 0 and y > 0:
+            self.move(x,y)
+        else:
+            self.move(QApplication.desktop().screen().rect().center() - self.rect().center())
         
         self.elimg = self.scn.addPixmap(QPixmap(":/images/Tree.png"))
         self.elimg.setTransformationMode(QtCore.Qt.SmoothTransformation)
         self.elimg.setZValue(2)
 
         self.gv.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.gv.customContextMenuRequested.connect(self.initContextMenu)        
+        self.gv.customContextMenuRequested.connect(self.initContextMenu)
+
+
         
         self.mx = 0
         self.my = 0
@@ -71,18 +79,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.snowalphach_len = self.height() / 3
         self.snows = []
         self.snowgroups = []
+        self.snowing = set.value("Main/Snowing","true") == "true"
         self.setSnows()
         
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.onTimer)
         self.timerinterval = 50
         self.timer.start(self.timerinterval)
-        self.speed = 1
-        self.lampturn = 1
+        self.speed = int(set.value("Main/speed","1"))
+        self.lampturn = int(set.value("Main/turncnt","1"))
         self.sparr = [0.1,0.4,0.6]
         self.cols = 6
         self.snowfallspeed = [2,1.25,0.8]
-        self.snowing = True
+        
         
 
 
@@ -225,6 +234,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 if y > hl:
                     a = 1 - (y - hl)/self.snowalphach_len
                 lamp = Lamp(self.scn,imgfn,x,y,a)
+                if not self.snowing:
+                    lamp.item.hide()
                 snows.append(lamp)
                 items.append(lamp.item)
             group = self.scn.createItemGroup(items)
@@ -298,6 +309,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.move(self.ps.x()+x,self.ps.y()+y)   
         
     def closeEvent(self,event):
+        set = QSettings("Tree", "config")
+        p = self.pos()
+        set.setValue("Main/Left",p.x())
+        set.setValue("Main/Top",p.y())
+        set.setValue("Main/Snowing",self.snowing)
+        set.setValue("Main/speed",self.speed)
+        set.setValue("Main/turncnt",self.lampturn)        
         self.qApp.quit()
         
 def main():
