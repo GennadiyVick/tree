@@ -15,6 +15,7 @@ import wnd
 import images
 import math
 from lamp import Lamp
+from lang import Lang
 
 class vect():
     def __init__(self,x=0,y=0):
@@ -56,8 +57,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.gv.setContextMenuPolicy(Qt.CustomContextMenu)
         self.gv.customContextMenuRequested.connect(self.initContextMenu)
 
-
-        
         self.mx = 0
         self.my = 0
         self.ps = None
@@ -79,6 +78,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sparr = [0.1,0.4,0.6]
         self.cols = 6
         self.snowfallspeed = [2,1.25,0.8]
+        self.lang = Lang()
         
         
 
@@ -87,36 +87,36 @@ class MainWindow(QtWidgets.QMainWindow):
         menu = QMenu(self)
         menu.setStyleSheet("background: #333; color: white;")
 
-        smenu = menu.addMenu("Скорость")
-        act = QAction("Медленно",self)
+        smenu = menu.addMenu(self.lang.tr('speed')) #speed
+        act = QAction(self.lang.tr('slow'),self) #slow
         act.triggered.connect(self.slowspeed)
         smenu.addAction(act)
-        act = QAction("Средне",self)
+        act = QAction(self.lang.tr('average'),self) #average
         act.triggered.connect(self.midspeed)
         smenu.addAction(act)
-        act = QAction("Быстро",self)
+        act = QAction(self.lang.tr('fast'),self) #fast
         act.triggered.connect(self.fastspeed)
         smenu.addAction(act)
         
-        kmenu = menu.addMenu("Переключения")
-        act = QAction("По 1 лампочке",self)
+        kmenu = menu.addMenu(self.lang.tr('switching')) #lamps turn count
+        act = QAction(self.lang.tr('lightbulb1'),self)
         act.triggered.connect(self.onelamp)
         kmenu.addAction(act)
-        act = QAction("По 2 лампочки",self)
+        act = QAction(self.lang.tr('lightbulb2'),self)
         act.triggered.connect(self.twolamp)
         kmenu.addAction(act)        
-        act = QAction("По 3 лампочки",self)
+        act = QAction(self.lang.tr('lightbulb3'),self)
         act.triggered.connect(self.treelamp)
         kmenu.addAction(act)        
-        act = QAction("По 4 лампочки",self)
+        act = QAction(self.lang.tr('lightbulb4'),self)
         act.triggered.connect(self.forelamp)
         kmenu.addAction(act)       
-        act = QAction("Снег",self)
+        act = QAction(self.lang.tr('snowing'),self) #snowing
         act.triggered.connect(self.snowOffOn)
         menu.addAction(act)     
         
         menu.addSeparator()
-        act = QAction("Закрыть",self)
+        act = QAction(self.lang.tr('close'),self) #close
         act.triggered.connect(self.close)
         menu.addAction(act)
         

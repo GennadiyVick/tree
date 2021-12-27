@@ -1,0 +1,13 @@
+{
+"speed": {"default":"Speed","ru":"Скорость"},
+"slow": {"default":"Slow","ru":"Медленно"},
+"average": {"default":"Average","ru":"Средне"},
+"fast": {"default":"Fast","ru":"Быстро"},
+"switching": {"default":"Switching","ru":"Переключение"},
+"lightbulb1": {"default":"1 light bulb","ru":"По 1 лампочке"},
+"lightbulb2": {"default":"2 light bulb","ru":"По 2 лампочки"},
+"lightbulb3": {"default":"3 light bulb","ru":"По 3 лампочке"},
+"lightbulb4": {"default":"4 light bulb","ru":"По 4 лампочки"},
+"snowing": {"default":"Snowing","ru":"Снег"},
+"close": {"default":"Close","ru":"Закрыть"}
+}
