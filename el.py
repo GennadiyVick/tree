@@ -14,7 +14,7 @@ import random
 import wnd
 import images
 import math
-from lamp import Lamp
+from lamp import Lamp, Snow
 from lang import Lang
 
 class vect():
@@ -67,6 +67,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.snows = []
         self.snowgroups = []
         self.snowing = set.value("Main/Snowing","true") == "true"
+        self.snowamplitude = [0.9, 0.5, 0.2]
         self.setSnows()
         
         self.timer = QTimer(self)
@@ -78,6 +79,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sparr = [0.1,0.4,0.6]
         self.cols = 6
         self.snowfallspeed = [2,1.25,0.8]
+
         self.lang = Lang()
         
         
@@ -221,11 +223,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 hl = self.height()-self.snowalphach_len
                 if y > hl:
                     a = 1 - (y - hl)/self.snowalphach_len
-                lamp = Lamp(self.scn,imgfn,x,y,a)
+                snow = Snow(self.scn,imgfn,x,y,a, self.snowamplitude[i])
                 if not self.snowing:
-                    lamp.item.hide()
-                snows.append(lamp)
-                items.append(lamp.item)
+                    snow.item.hide()
+                snows.append(snow)
+                items.append(snow.item)
             group = self.scn.createItemGroup(items)
             if i < 2:
                 group.setZValue(4)
@@ -267,10 +269,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 for snow in self.snows[i]:
                     a = snow.alpha
                     snow.y += self.snowfallspeed[i]
+                    snow.hesitation()
                     if snow.y > self.height(): 
                         snow.y = -10-random.randint(0,15)
                         snow.x = random.randint(8,self.width()-8)
-                        snow.alpha = 1
+                        snow.reset()
                     else:
                         hl = self.height()-self.snowalphach_len
                         if snow.y > hl:
@@ -288,7 +291,8 @@ class MainWindow(QtWidgets.QMainWindow):
            перемещении мыши вызывать перемещение главного окна."""
         self.mx = event.globalPos().x()
         self.my = event.globalPos().y()
-        self.ps = self.pos()    
+        self.ps = self.pos()
+
     def mouseMove(self,event):
         """Событие перемещения мыши на QGraphicsView,
            в данной функции перемещаем главное окно по экрану."""

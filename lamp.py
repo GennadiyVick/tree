@@ -5,6 +5,8 @@
 
 from PyQt5.QtCore import Qt, QPointF
 from PyQt5.QtGui import QPixmap
+from math import sin
+from random import randint
 
 class Lamp:
     def __init__(self,scn,img,x=0,y=0,alpha=0.0):
@@ -23,3 +25,19 @@ class Lamp:
         self.x = x
         self.y = y
         self.alpha = alpha
+
+class Snow(Lamp):
+    def __init__(self, scn, img, x=0, y=0, alpha=0.0, amplitude=2, frequence=20):
+        super(Snow, self).__init__(scn, img, x, y, alpha)
+        self.amplitude = amplitude
+        self.frequence = frequence
+        self.yoffset = randint(0,100)
+        self.frequenceoffset = randint(-6,6)
+
+    def hesitation(self):
+        self.x += sin((self.y+self.yoffset) / (self.frequence+self.frequenceoffset)) * self.amplitude
+
+    def reset(self):
+        self.yoffset = randint(0,100)
+        self.frequenceoffset = randint(-6,6)
+        self.alpha = 1
