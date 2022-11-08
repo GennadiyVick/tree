@@ -23,7 +23,10 @@ To run this program, you must enter in the console
 
 python program_path\el.py
 
-You can also create a launch shortcut on the desktop
+You can also create a launch shortcut on the desktop.
+To run from a shortcut, use pythonw instead of python
+
+pythonw program_path\el.py
 
 Linux: ========================
 For the program to work in Linux, you need to use python version 3 or higher.
